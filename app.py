@@ -1,3 +1,4 @@
+import os
 import gradio as gr
 from transformers import pipeline
 
@@ -21,5 +22,5 @@ iface = gr.Interface(
     description="Ask a question based on the provided context."
 )
 
-# Launch the app
-iface.launch()
+# Use Render's PORT environment variable
+iface.launch(server_port=int(os.environ.get("PORT", 7860)), server_name="0.0.0.0")
