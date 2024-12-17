@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask ChatGPT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f7f9fc;
+        }
+        h1 { color: #333; }
+        textarea, button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e8f0fe;
+            border: 1px solid #b6d7ff;
+            width: 300px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ask ChatGPT</h1>
+    <textarea id="question" placeholder="Type your question here..." rows="3"></textarea>
+    <button onclick="askChatGPT()">Submit</button>
+    <div id="response"></div>
+
+    <script>
+        async function askChatGPT() {
+            const question = document.getElementById('question').value;
+            const responseDiv = document.getElementById('response');
+            
+            responseDiv.textContent = 'Loading...';
+
+            try {
+                const response = await fetch('https://your-backend-url/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question })
+                });
+
+                const data = await response.json();
+                if (data.answer) {
+                    responseDiv.textContent = data.answer;
+                } else {
+                    responseDiv.textContent = 'Error: ' + data.error;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                responseDiv.textContent = 'Failed to connect to the server.';
+            }
+        }
+    </script>
+</body>
+</html>
