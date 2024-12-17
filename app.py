@@ -30,8 +30,8 @@ iface = gr.Interface(
     description="Ask a question based on the provided context."
 )
 
-# Launch the Gradio app with the correct port and server binding
-port = int(os.environ.get("PORT", 7860))  # Use Render's PORT or default to 7860
+# Launch the Gradio app with the correct port for Render
+port = int(os.environ.get("PORT", 10000))  # Use Render's PORT or default to 10000
 print(f"Server running on port {port}")  # Log the port number to help with debugging
 iface.launch(
     server_name="0.0.0.0",  # Listen on all network interfaces
