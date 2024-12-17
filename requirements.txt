@@ -1,2 +1,3 @@
-gradio
 transformers
+torch>=1.7.0
+gradio
