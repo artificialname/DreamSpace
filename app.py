@@ -3,15 +3,23 @@ import gradio as gr
 from transformers import pipeline
 
 # Load the pre-trained model for question answering
-qa_pipeline = pipeline("question-answering", model="distilbert-base-uncased-distilled-squad")
+try:
+    qa_pipeline = pipeline("question-answering", model="distilbert-base-uncased-distilled-squad")
+except Exception as e:
+    raise RuntimeError("Failed to load the QA pipeline. Ensure Transformers library is installed and the model is accessible.") from e
 
 # Define the question-answering function
 def answer_question(question, context):
-    result = qa_pipeline({
-        'question': question,
-        'context': context
-    })
-    return result['answer']
+    try:
+        if not question or not context:
+            return "Please provide both a question and a context."
+        result = qa_pipeline({
+            'question': question,
+            'context': context
+        })
+        return result['answer']
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
 
 # Create the Gradio interface
 iface = gr.Interface(
@@ -22,5 +30,8 @@ iface = gr.Interface(
     description="Ask a question based on the provided context."
 )
 
-# Use Render's PORT environment variable
-iface.launch(server_port=int(os.environ.get("PORT", 7860)), server_name="0.0.0.0")
+# Launch the Gradio app
+iface.launch(
+    server_port=int(os.environ.get("PORT", 7860)),  # Use Render's PORT or default to 7860
+    server_name="0.0.0.0"  # Use 'localhost' for local testing
+)
