@@ -2,19 +2,21 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 require('dotenv').config();
-const Bottleneck = require('bottleneck');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Initialize the bottleneck limiter to throttle the requests
-const limiter = new Bottleneck({
-    minTime: 1000, // Minimum 1 second between requests
-});
+// Enable CORS for specific origin
+const corsOptions = {
+    origin: 'https://dream-space-meanings.onrender.com', // Allow only this frontend URL
+    methods: 'GET,POST', // Allow only GET and POST requests
+    allowedHeaders: 'Content-Type', // Allow specific headers
+};
+
+app.use(cors(corsOptions)); // Apply CORS configuration
 
 // Middleware
 app.use(express.json());
-app.use(cors());
 
 // Secret question modification function
 function modifyQuestion(userQuestion) {
@@ -38,36 +40,27 @@ app.post('/ask', async (req, res) => {
         // Modify the user's question
         const modifiedQuestion = modifyQuestion(question);
 
-        // Throttle the request to OpenAI API using Bottleneck
-        const response = await limiter.schedule(async () => {
-            return await axios.post(
-                'https://api.openai.com/v1/chat/completions',
-                {
-                    model: 'gpt-3.5-turbo',
-                    messages: [{ role: 'user', content: modifiedQuestion }],
-                    max_tokens: 150,
+        // Send request to OpenAI API
+        const response = await axios.post(
+            'https://api.openai.com/v1/chat/completions',
+            {
+                model: 'gpt-3.5-turbo', 
+                messages: [{ role: 'user', content: modifiedQuestion }],
+                max_tokens: 150,
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                    'Content-Type': 'application/json',
                 },
-                {
-                    headers: {
-                        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-        });
+            }
+        );
 
-        // Send ChatGPT response back to the frontend
+        // Send response back to the frontend
         res.json({ answer: response.data.choices[0].message.content });
     } catch (error) {
-        console.error('Error querying OpenAI API:', error.response?.data || error.message);
-        if (error.response?.status === 429) {
-            // Handle rate limiting error gracefully
-            res.status(429).json({
-                error: 'Rate limit exceeded. Please try again later.',
-            });
-        } else {
-            res.status(500).json({ error: 'Failed to fetch response from OpenAI.' });
-        }
+        console.error('Error querying OpenAI API:', error.message);
+        res.status(500).json({ error: 'Failed to fetch response from OpenAI.' });
     }
 });
 
