@@ -56,7 +56,8 @@
             responseDiv.textContent = 'Loading...';
 
             try {
-                const response = await fetch('https://dreamspace-ivna.onrender.com', {
+                // Update fetch to correct /ask endpoint
+                const response = await fetch('https://dreamspace-ivna.onrender.com/ask', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ question })
