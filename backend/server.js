@@ -6,9 +6,16 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+// CORS configuration to allow specific frontend domain
+const corsOptions = {
+    origin: 'https://dream-space-meanings.onrender.com', // Allow only this domain
+    methods: ['GET', 'POST'], // Allow specific methods
+    allowedHeaders: ['Content-Type'], // Allow specific headers
+};
+
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions)); // Use CORS with specific options
 
 // Secret question modification function
 function modifyQuestion(userQuestion) {
