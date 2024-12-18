@@ -16,12 +16,12 @@ function modifyQuestion(userQuestion) {
     return `Rephrase this in a funny way: ${userQuestion}`;
 }
 
-// Root route to handle GET requests
+// Route to handle GET request to root
 app.get('/', (req, res) => {
-    res.send('Backend is working. Send a POST request to /ask');
+    res.send({ message: "Backend is working!" }); // Test if backend is working
 });
 
-// Route to handle POST requests for questions
+// Route to handle questions via POST
 app.post('/ask', async (req, res) => {
     const { question } = req.body;
 
