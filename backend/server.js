@@ -6,16 +6,9 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// CORS configuration to allow specific frontend domain
-const corsOptions = {
-    origin: 'https://dream-space-meanings.onrender.com', // Allow only this domain
-    methods: ['GET', 'POST'], // Allow specific methods
-    allowedHeaders: ['Content-Type'], // Allow specific headers
-};
-
 // Middleware
 app.use(express.json());
-app.use(cors(corsOptions)); // Use CORS with specific options
+app.use(cors());
 
 // Secret question modification function
 function modifyQuestion(userQuestion) {
@@ -25,7 +18,7 @@ function modifyQuestion(userQuestion) {
 
 // Route to handle GET request to root
 app.get('/', (req, res) => {
-    res.send({ message: "Backend is working!" }); // Test if backend is working
+    res.send({ message: "Backend is working!" });
 });
 
 // Route to handle questions via POST
@@ -44,7 +37,7 @@ app.post('/ask', async (req, res) => {
         const response = await axios.post(
             'https://api.openai.com/v1/chat/completions',
             {
-                model: 'gpt-3.5-turbo', // Or GPT-4 if you have access
+                model: 'gpt-3.5-turbo', // Replace with 'gpt-4' if applicable
                 messages: [{ role: 'user', content: modifiedQuestion }],
                 max_tokens: 150,
             },
@@ -59,8 +52,20 @@ app.post('/ask', async (req, res) => {
         // Send ChatGPT response back to the frontend
         res.json({ answer: response.data.choices[0].message.content });
     } catch (error) {
-        console.error('Error querying OpenAI API:', error.message);
-        res.status(500).json({ error: 'Failed to fetch response from OpenAI.' });
+        // Log detailed error information
+        console.error('Error querying OpenAI API:', error.response?.data || error.message);
+
+        // Handle different types of errors
+        if (error.response) {
+            // API responded with a status code outside of the 2xx range
+            return res.status(error.response.status).json({ error: error.response.data });
+        } else if (error.request) {
+            // Request was made but no response received
+            return res.status(500).json({ error: 'No response received from OpenAI.' });
+        } else {
+            // Something else went wrong
+            return res.status(500).json({ error: 'Failed to fetch response from OpenAI.' });
+        }
     }
 });
 
