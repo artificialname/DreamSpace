@@ -53,6 +53,12 @@
             const question = document.getElementById('question').value;
             const responseDiv = document.getElementById('response');
             
+            // Check if question is empty
+            if (!question.trim()) {
+                responseDiv.textContent = 'Please enter a question.';
+                return;
+            }
+
             // Show loading message
             responseDiv.textContent = 'Loading...';
 
@@ -76,7 +82,7 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                responseDiv.textContent = 'Failed to connect to the server.';
+                responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
             }
         }
     </script>
