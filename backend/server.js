@@ -12,7 +12,6 @@ app.use(cors());
 
 // Secret question modification function
 function modifyQuestion(userQuestion) {
-    // Secretly modify the question (you can customize this)
     return `Rephrase this in a funny way: ${userQuestion}`;
 }
 
@@ -34,10 +33,11 @@ app.post('/ask', async (req, res) => {
         const modifiedQuestion = modifyQuestion(question);
 
         // Send request to OpenAI API
+        console.log('Sending request to OpenAI with question:', modifiedQuestion);
         const response = await axios.post(
             'https://api.openai.com/v1/chat/completions',
             {
-                model: 'gpt-3.5-turbo', // Replace with 'gpt-4' if applicable
+                model: 'gpt-3.5-turbo', // Use an appropriate model
                 messages: [{ role: 'user', content: modifiedQuestion }],
                 max_tokens: 150,
             },
@@ -49,22 +49,16 @@ app.post('/ask', async (req, res) => {
             }
         );
 
-        // Send ChatGPT response back to the frontend
+        // Respond with the answer
         res.json({ answer: response.data.choices[0].message.content });
     } catch (error) {
-        // Log detailed error information
         console.error('Error querying OpenAI API:', error.response?.data || error.message);
 
-        // Handle different types of errors
-        if (error.response) {
-            // API responded with a status code outside of the 2xx range
-            return res.status(error.response.status).json({ error: error.response.data });
-        } else if (error.request) {
-            // Request was made but no response received
-            return res.status(500).json({ error: 'No response received from OpenAI.' });
+        // Handle rate limiting (429) separately
+        if (error.response?.status === 429) {
+            res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
         } else {
-            // Something else went wrong
-            return res.status(500).json({ error: 'Failed to fetch response from OpenAI.' });
+            res.status(500).json({ error: 'Failed to fetch response from OpenAI.' });
         }
     }
 });
