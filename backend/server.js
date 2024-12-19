@@ -25,7 +25,7 @@ app.post('/ask', async (req, res) => {
             {
                 model: 'gpt-4o-mini', // Use GPT-4o mini model
                 messages: [{ role: 'user', content: question }],
-                max_tokens: 150,
+                max_tokens: 2000,
             },
             {
                 headers: {
