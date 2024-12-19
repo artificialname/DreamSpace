@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ask ChatGPT</title>
+    <title>Dream Analysis</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,9 +43,9 @@
     </style>
 </head>
 <body>
-    <h1>Ask ChatGPT</h1>
-    <textarea id="question" placeholder="Type your question here..." rows="3"></textarea>
-    <button onclick="askChatGPT()">Submit</button>
+    <h1>Describe your dream here. Add as many details as possible.</h1>
+    <textarea id="question" placeholder="Type your dream description here..." rows="3"></textarea>
+    <button onclick="askChatGPT()">Click here for dream analysis</button>
     <div id="response"></div>
 
     <script>
@@ -56,13 +56,13 @@
             const responseDiv = document.getElementById('response');
 
             if (!question.trim()) {
-                responseDiv.textContent = 'Please enter a question.';
+                responseDiv.textContent = 'Please enter a dream description.';
                 return;
             }
 
             // Prevent multiple requests being sent in quick succession
             if (isRequesting) {
-                responseDiv.textContent = 'Please wait before submitting another question.';
+                responseDiv.textContent = 'Please wait before submitting another request.';
                 return;
             }
 
