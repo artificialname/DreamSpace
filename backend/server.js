@@ -20,12 +20,18 @@ app.post('/ask', async (req, res) => {
     }
 
     try {
+        // Add your secret instructions here
+        const secretInstructions = "Here is my dream. Give me a hopeful analysis. Don't ask any questions in your response. Don't comment on the dream or provide observations about its nature , or judgments about its significance. Just give a hopeful interpretation. ";
+
         const response = await axios.post(
             'https://api.openai.com/v1/chat/completions',
             {
                 model: 'gpt-4o-mini', // Use GPT-4o mini model
-                messages: [{ role: 'user', content: question }],
-                max_tokens: 2000,
+                messages: [
+                    { role: 'system', content: secretInstructions }, // Add your secret instructions here
+                    { role: 'user', content: question }
+                ],
+                max_tokens: 2000, // Set max tokens to 2000
             },
             {
                 headers: {
