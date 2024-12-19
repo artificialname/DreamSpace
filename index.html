@@ -10,18 +10,35 @@
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
             background-color: #f7f9fc;
         }
-        h1 { color: #333; }
+        .container {
+            display: flex;
+            width: 80%;
+            max-width: 1200px;
+            justify-content: space-between;
+            padding: 20px;
+            gap: 20px;
+        }
+        .left-column, .right-column {
+            width: 48%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            width: 100%;
+        }
         textarea, button {
             margin-top: 10px;
             padding: 10px;
             font-size: 16px;
-            width: 300px;
+            width: 100%;
         }
         button {
             background-color: #007BFF;
@@ -37,16 +54,22 @@
             padding: 10px;
             background-color: #e8f0fe;
             border: 1px solid #b6d7ff;
-            width: 300px;
+            width: 100%;
             white-space: pre-wrap;
         }
     </style>
 </head>
 <body>
-    <h1>Describe your dream here. Add as many details as possible.</h1>
-    <textarea id="question" placeholder="Type your dream description here..." rows="3"></textarea>
-    <button onclick="askChatGPT()">Click here for dream analysis</button>
-    <div id="response"></div>
+    <div class="container">
+        <div class="left-column">
+            <h1>Describe your dream here. Add as many details as possible.</h1>
+            <textarea id="question" placeholder="Type your dream description here..." rows="5"></textarea>
+            <button onclick="askChatGPT()">Click here for dream analysis</button>
+        </div>
+        <div class="right-column">
+            <div id="response"></div>
+        </div>
+    </div>
 
     <script>
         let isRequesting = false;
