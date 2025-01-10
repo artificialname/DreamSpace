@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dream Analysis</title>
+    <title>Soundwave Dream Analysis</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,13 +13,17 @@
             display: flex;
             align-items: flex-end;
             justify-content: flex-start;
-            background-color: #f7f9fc;
+            background-image: url('https://via.placeholder.com/1200x800.png?text=Background');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: #ffffff;
         }
         .container {
             width: 30%;
             max-width: 400px;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: rgba(0, 0, 0, 0.7);
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             margin: 20px;
@@ -27,7 +31,6 @@
         h1 {
             font-size: 18px;
             margin-bottom: 10px;
-            color: #333;
         }
         textarea, select, button {
             width: 100%;
@@ -55,16 +58,29 @@
         #response {
             margin-top: 20px;
             padding: 10px;
-            background-color: #e8f0fe;
+            background-color: rgba(255, 255, 255, 0.8);
             border: 1px solid #b6d7ff;
             border-radius: 5px;
+            color: #000000;
             white-space: pre-wrap;
+        }
+        .instructions {
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Dropdown Section -->
+        <div class="instructions">
+            <h1>Soundwave Dream Analysis</h1>
+            <p>For optimal results:</p>
+            <ol>
+                <li>Play the sound wave track while you sleep. Use your phone’s lowest volume setting.</li>
+                <li>Describe your dream below in as much detail as possible.</li>
+            </ol>
+        </div>
         <div class="dropdown-container">
             <select id="country">
                 <option value="">Select Country</option>
@@ -79,7 +95,6 @@
             </select>
         </div>
 
-        <!-- Dream Description Section -->
         <h1>Describe your dream here:</h1>
         <textarea id="question" placeholder="Type your dream description here..." rows="5"></textarea>
         <button id="analyzeButton" onclick="askChatGPT()">Click here for dream analysis</button>
@@ -93,7 +108,6 @@
         const soundWaveDropdown = document.getElementById('soundWave');
         const analyzeButton = document.getElementById('analyzeButton');
 
-        // Full list of countries
         const countries = [
             "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
             "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
@@ -127,7 +141,6 @@
             countryDropdown.appendChild(option);
         });
 
-        // Populate the age dropdown
         for (let i = 1; i <= 100; i++) {
             const option = document.createElement('option');
             option.value = i;
@@ -135,7 +148,6 @@
             ageDropdown.appendChild(option);
         }
 
-        // Enable button only if all dropdowns have valid selections
         function validateSelections() {
             if (
                 countryDropdown.value &&
@@ -148,7 +160,6 @@
             }
         }
 
-        // Add event listeners to validate selections
         countryDropdown.addEventListener('change', validateSelections);
         ageDropdown.addEventListener('change', validateSelections);
         soundWaveDropdown.addEventListener('change', validateSelections);
