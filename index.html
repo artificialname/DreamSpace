@@ -9,45 +9,33 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
             background-color: #f7f9fc;
         }
         .container {
-            display: flex;
-            flex-direction: column;
-            width: 80%;
-            max-width: 1200px;
-            gap: 20px;
-        }
-        .dropdown-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
-        .dropdown-container select {
-            padding: 10px;
-            font-size: 16px;
             width: 30%;
-        }
-        .left-column {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin: 20px;
         }
         h1 {
+            font-size: 18px;
+            margin-bottom: 10px;
             color: #333;
-            text-align: center;
-            width: 100%;
         }
-        textarea, button {
+        textarea, select, button {
+            width: 100%;
             margin-top: 10px;
             padding: 10px;
             font-size: 16px;
-            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
         button {
             background-color: #007BFF;
@@ -69,7 +57,7 @@
             padding: 10px;
             background-color: #e8f0fe;
             border: 1px solid #b6d7ff;
-            width: 100%;
+            border-radius: 5px;
             white-space: pre-wrap;
         }
     </style>
@@ -90,13 +78,11 @@
                 <option value="no">No</option>
             </select>
         </div>
-        
+
         <!-- Dream Description Section -->
-        <div class="left-column">
-            <h1>Describe your dream here. Add as many details as possible.</h1>
-            <textarea id="question" placeholder="Type your dream description here..." rows="5"></textarea>
-            <button id="analyzeButton" onclick="askChatGPT()">Click here for dream analysis</button>
-        </div>
+        <h1>Describe your dream here:</h1>
+        <textarea id="question" placeholder="Type your dream description here..." rows="5"></textarea>
+        <button id="analyzeButton" onclick="askChatGPT()">Click here for dream analysis</button>
 
         <div id="response"></div>
     </div>
