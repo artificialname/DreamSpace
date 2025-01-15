@@ -12,37 +12,73 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
             background: linear-gradient(180deg, #070D29, #1E3A8A);
             color: #ffffff;
             font-size: calc(16px + 0.2vw);
             line-height: 1.6;
         }
 
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 33%;
+            padding: 20px;
+            font-size: calc(1.5vw + 1em);
+            text-align: left;
+            z-index: 10;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .header.hidden {
+            opacity: 0;
+            transform: translateY(-100%);
+        }
+
+        .header-content {
+            position: absolute;
+            top: 30%;
+            left: 5%;
+            font-family: 'Courier New', monospace;
+            font-size: calc(2vw + 1em);
+            color: #F0F0F0;
+            text-align: left;
+            z-index: 1;
+        }
+
         .container {
-            display: flex;
-            flex-direction: row;
-            width: 66%;
+            width: 100%;
             max-width: 90%;
             padding: 20px;
             background-color: rgba(0, 0, 0, 0.7);
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            margin-top: 60px;
+            margin: 20px auto;
+            position: relative;
+            z-index: 0;
         }
 
         @media (max-width: 768px) {
+            .header {
+                width: 100%;
+                text-align: center;
+            }
+
             .container {
                 width: 100%;
-                flex-direction: column;
+            }
+
+            .header-content {
+                font-size: 1.2em;
+                text-align: center;
+                position: static;
+                margin-bottom: 20px;
             }
         }
 
         h1 {
             font-size: 1.5em;
             margin-bottom: 10px;
-            color: #F0F0F0;
         }
 
         textarea, select, button {
@@ -102,33 +138,6 @@
             gap: 10px;
         }
 
-        .right-text {
-            position: fixed;
-            top: 5%;
-            left: 3%;
-            width: 33%;
-            font-family: 'Courier New', monospace;
-            font-size: calc(2vw + 1em);
-            color: #F0F0F0;
-            text-align: left;
-            z-index: 1;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        @media (max-width: 768px) {
-            .right-text {
-                width: 100%;
-                text-align: center;
-                position: static;
-                margin-bottom: 20px;
-            }
-        }
-
-        .right-text.hidden {
-            opacity: 0;
-        }
-
         .error {
             border-color: red !important;
             box-shadow: 0 0 5px rgba(255, 0, 0, 0.5) !important;
@@ -146,8 +155,10 @@
     </style>
 </head>
 <body>
-    <div class="right-text" id="rightText">
-        Harmonize your dreams<br />with sound waves,<br />receive a sublime<br />interpretation<span class="blinking">.</span>
+    <div class="header">
+        <div class="header-content">
+            Harmonize your dreams with sound waves, receive a sublime interpretation<span class="blinking">.</span>
+        </div>
     </div>
     <div class="container">
         <div class="instructions">
@@ -180,51 +191,21 @@
     </div>
 
     <script>
+        const header = document.querySelector('.header');
+        const container = document.querySelector('.container');
+        const analyzeButton = document.getElementById('analyzeButton');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > window.innerHeight / 3) {
+                header.classList.add('hidden');
+            } else {
+                header.classList.remove('hidden');
+            }
+        });
+
         const countryDropdown = document.getElementById('country');
         const ageDropdown = document.getElementById('age');
         const soundWaveDropdown = document.getElementById('soundWave');
-        const analyzeButton = document.getElementById('analyzeButton');
-        const rightText = document.getElementById('rightText');
-
-        const countries = [
-            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
-            "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
-            "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", 
-            "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", 
-            "Chile", "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)", "Costa Rica", "Croatia", "Cuba", "Cyprus", 
-            "Czechia (Czech Republic)", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", 
-            "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini (fmr. Swaziland)", "Ethiopia", "Fiji", 
-            "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", 
-            "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Holy See", "Honduras", "Hungary", "Iceland", "India", "Indonesia", 
-            "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", 
-            "Korea (North)", "Korea (South)", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", 
-            "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", 
-            "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", 
-            "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar (Burma)", "Namibia", "Nauru", "Nepal", "Netherlands", 
-            "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", 
-            "Palestine State", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", 
-            "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", 
-            "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", 
-            "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", 
-            "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan", "Tanzania", "Thailand", 
-            "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", 
-            "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan", 
-            "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
-        ];
-
-        countries.forEach(country => {
-            const option = document.createElement('option');
-            option.value = country;
-            option.textContent = country;
-            countryDropdown.appendChild(option);
-        });
-
-        for (let i = 1; i <= 100; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = i;
-            ageDropdown.appendChild(option);
-        }
 
         function validateSelections() {
             let isValid = true;
@@ -288,14 +269,6 @@
                 isRequesting = false;
             }
         }
-
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 100) {
-                rightText.classList.add('hidden');
-            } else {
-                rightText.classList.remove('hidden');
-            }
-        });
     </script>
 </body>
 </html>
