@@ -17,13 +17,13 @@
             color: #ffffff;
         }
         .container {
-            width: 40%;
+            width: 30%;
+            max-width: 400px;
             padding: 20px;
             background-color: rgba(0, 0, 0, 0.7);
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            margin: 30% 0 0 6%; /* Top, Right, Bottom, Left */
-
+            margin: 20px;
         }
         h1 {
             font-size: 18px;
@@ -72,26 +72,35 @@
         }
         .right-text {
             position: absolute;
-            top: 14%;
-            right: 8%;
+            top: 24%;
+            right: 20%;
             font-family: 'Courier New', monospace;
-            font-size: 3vw; /* Adjust size relative to screen width */
+            font-size: 2vw; /* Adjust size relative to screen width */
             color: white;
             text-align: right;
+        }
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .blinking {
+            animation: blink 1s infinite;
         }
     </style>
 </head>
 <body>
     <div class="right-text">
-        For a sublime interpretation,<br>harmonize your dreams with sound waves <blink>.</blink>
+        Harmonize your dreams with sound waves for a sublime interpretation<span class="blinking">.</span>
     </div>
     <div class="container floating-text">
         <div class="instructions">
             <h1>Soundwave Dream Analysis</h1>
             <p>For optimal results:</p>
             <ol>
-                <li>Play the sound wave baseline while you sleep. Be sure to use your phone’s second-lowest volume setting, the sound does not need to be audible while you are awake.</li>
-                <li>Once you awake, describe your dream below in as much detail as possible.</li>
+                <li>Play the sound wave track while you sleep. Use your phone’s lowest volume setting.</li>
+                <li>Describe your dream below in as much detail as possible.</li>
             </ol>
         </div>
         <div class="dropdown-container">
