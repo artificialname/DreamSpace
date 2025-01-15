@@ -6,35 +6,71 @@
     <title>Soundwave Dream Analysis</title>
     <style>
         body {
-            margin: 0;
             font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             background: linear-gradient(180deg, #070D29, #1E3A8A);
             color: #ffffff;
             font-size: calc(16px + 0.2vw);
             line-height: 1.6;
-        }
-
-        .container {
-            width: 80%;
-            margin: 5% auto 1%;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            padding-top: 5%; /* 5% margin at the top */
+            padding-bottom: 1%; /* 1% margin at the bottom */
+            padding-left: 10%; /* 10% margin on the left */
+            padding-right: 10%; /* 10% margin on the right */
+            box-sizing: border-box;
         }
 
         .header {
+            width: 100%;
+            height: 33vh; /* Takes up the top third of the page */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            font-size: 2em;
-            font-weight: bold;
-            transition: opacity 0.3s ease, margin-top 0.3s ease;
-            margin-top: 10%;
+            padding: 20px;
         }
 
-        .content {
-            background-color: rgba(0, 0, 0, 0.7);
+        .header-content {
+            font-family: 'Courier New', monospace;
+            font-size: calc(2vw + 1em);
+            color: #F0F0F0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            height: 67vh; /* Takes up the remaining two thirds */
+            overflow-y: auto;
             padding: 20px;
-            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin: 20px;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                height: 33vh;
+                padding: 20px;
+            }
+
+            .header-content {
+                font-size: 1.2em;
+            }
+
+            .container {
+                height: auto; /* Allow content to be scrollable */
+                margin-top: 0;
+            }
+        }
+
+        h1 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
         }
 
         textarea, select, button {
@@ -57,85 +93,188 @@
             color: white;
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            opacity: 0.6;
+            pointer-events: none;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        button.active {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         button:hover {
             background-color: #0056b3;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                width: 90%;
-                margin: 5% auto;
-            }
-
-            .header {
-                font-size: 1.5em;
-            }
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #b6d7ff;
+            border-radius: 5px;
+            color: #000000;
+            white-space: pre-wrap;
         }
+
+        .instructions {
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            line-height: 1.6;
+            color: #F0F0F0;
+        }
+
+        .dropdown-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .error {
+            border-color: red !important;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5) !important;
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header" id="header">
+    <div class="header">
+        <div class="header-content">
             Harmonize your dreams with sound waves, receive a sublime interpretation.
         </div>
-        <div class="content">
+    </div>
+    <div class="container">
+        <div class="instructions">
             <h1>Soundwave Dream Analysis</h1>
             <p>For optimal results:</p>
             <ol>
                 <li>Play the sound wave track while you sleep. Be sure to use your phone’s second-lowest volume setting, the sound need not be audible while awake.</li>
                 <li>Once you have slept, describe your dream below in as much detail as possible.</li>
             </ol>
-            <select id="country">
-                <option value="">Select Country</option>
-                <!-- Insert all countries dynamically via JS -->
-            </select>
-            <select id="age">
-                <option value="">Select Age</option>
-                <!-- Populate age dynamically via JS -->
-            </select>
-            <textarea id="question" placeholder="Describe your dream here..." rows="5"></textarea>
-            <button id="analyzeButton">Analyze Dream</button>
         </div>
+        <div class="dropdown-container">
+            <select id="country" aria-label="Select Country">
+                <option value="">Select Country</option>
+                <!-- All countries will be loaded here -->
+            </select>
+            <select id="age" aria-label="Select Age">
+                <option value="">Select Age</option>
+                <option value="Under 18">Under 18</option>
+                <option value="18-25">18-25</option>
+                <option value="26-35">26-35</option>
+                <option value="36-50">36-50</option>
+                <option value="51+">51+</option>
+            </select>
+            <select id="soundWave" aria-label="Did you utilize the sound wave baseline?">
+                <option value="">Did you utilize the sound wave baseline?</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+
+        <h1>Describe your dream here:</h1>
+        <textarea id="question" placeholder="Type your dream description here..." rows="5" aria-label="Dream Description"></textarea>
+        <button id="analyzeButton" onclick="askChatGPT()" aria-label="Analyze Dream">Click here for dream analysis</button>
+
+        <div id="response" aria-live="polite"></div>
     </div>
 
     <script>
-        // Populate countries and age options
+        const analyzeButton = document.getElementById('analyzeButton');
+
         const countryDropdown = document.getElementById('country');
         const ageDropdown = document.getElementById('age');
-        const countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"];
-        
+        const soundWaveDropdown = document.getElementById('soundWave');
+
+        const countries = [
+            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+            "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana",
+            "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile",
+            "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Democratic Republic of the Congo", "Denmark",
+            "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia",
+            "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
+            "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan",
+            "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein",
+            "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico",
+            "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand",
+            "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines",
+            "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa",
+            "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
+            "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania",
+            "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates",
+            "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+        ];
+
+        // Populate the country dropdown with all countries
         countries.forEach(country => {
-            const option = document.createElement('option');
+            const option = document.createElement("option");
             option.value = country;
             option.textContent = country;
             countryDropdown.appendChild(option);
         });
 
-        for (let i = 1; i <= 100; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = i;
-            ageDropdown.appendChild(option);
+        function validateSelections() {
+            let isValid = true;
+
+            [countryDropdown, ageDropdown, soundWaveDropdown].forEach(select => {
+                if (!select.value) {
+                    select.classList.add('error');
+                    isValid = false;
+                } else {
+                    select.classList.remove('error');
+                }
+            });
+
+            if (isValid) {
+                analyzeButton.classList.add('active');
+            } else {
+                analyzeButton.classList.remove('active');
+            }
         }
 
-        // Scroll behavior for fading header
-        const header = document.getElementById('header');
-        let lastScrollTop = 0;
+        countryDropdown.addEventListener('change', validateSelections);
+        ageDropdown.addEventListener('change', validateSelections);
+        soundWaveDropdown.addEventListener('change', validateSelections);
 
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.scrollY;
-            const fadeOutPoint = 150; // Fading starts after 150px scroll
-            const maxOpacity = 1;
+        let isRequesting = false;
 
-            if (scrollTop > fadeOutPoint) {
-                header.style.opacity = Math.max(0, maxOpacity - (scrollTop - fadeOutPoint) / fadeOutPoint);
-            } else {
-                header.style.opacity = maxOpacity;
+        async function askChatGPT() {
+            const question = document.getElementById('question').value;
+            const responseDiv = document.getElementById('response');
+
+            if (!question.trim()) {
+                responseDiv.textContent = 'Please enter a dream description.';
+                return;
             }
-        });
+
+            if (!analyzeButton.classList.contains('active')) {
+                responseDiv.textContent = 'Please complete all selections before analyzing.';
+                return;
+            }
+
+            responseDiv.textContent = 'Loading...';
+            isRequesting = true;
+
+            try {
+                const response = await fetch('https://dreamspace-ivna.onrender.com/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        question,
+                        country: countryDropdown.value,
+                        age: ageDropdown.value,
+                        soundWave: soundWaveDropdown.value,
+                    }),
+                });
+
+                const data = await response.json();
+                responseDiv.textContent = data.answer || `Error: ${data.error}`;
+            } catch (error) {
+                responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
+            } finally {
+                isRequesting = false;
+            }
+        }
     </script>
 </body>
 </html>
