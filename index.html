@@ -22,17 +22,11 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 33%;
+            width: 100%;
             padding: 20px;
             font-size: calc(1.5vw + 1em);
             text-align: left;
             z-index: 10;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .header.hidden {
-            opacity: 0;
-            transform: translateY(-100%);
         }
 
         .header-content {
@@ -47,6 +41,7 @@
         }
 
         .container {
+            margin-top: 30vh; /* Adds space for the header */
             width: 100%;
             max-width: 90%;
             padding: 20px;
@@ -54,8 +49,6 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             margin: 20px auto;
-            position: relative;
-            z-index: 0;
         }
 
         @media (max-width: 768px) {
@@ -143,21 +136,12 @@
             box-shadow: 0 0 5px rgba(255, 0, 0, 0.5) !important;
         }
 
-        @keyframes blink {
-            50% {
-                opacity: 0;
-            }
-        }
-
-        .blinking {
-            animation: blink 1s infinite;
-        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="header-content">
-            Harmonize your dreams with sound waves, receive a sublime interpretation<span class="blinking">.</span>
+            Harmonize your dreams with sound waves, receive a sublime interpretation.
         </div>
     </div>
     <div class="container">
@@ -191,17 +175,7 @@
     </div>
 
     <script>
-        const header = document.querySelector('.header');
-        const container = document.querySelector('.container');
         const analyzeButton = document.getElementById('analyzeButton');
-
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > window.innerHeight / 3) {
-                header.classList.add('hidden');
-            } else {
-                header.classList.remove('hidden');
-            }
-        });
 
         const countryDropdown = document.getElementById('country');
         const ageDropdown = document.getElementById('age');
