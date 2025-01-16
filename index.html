@@ -5,23 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soundwave Dream Analysis</title>
     <style>
-        body {
-            font-family: 'Open Sans', sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            background: linear-gradient(180deg, #070D29, #1E3A8A);
-            color: #ffffff;
-            font-size: calc(16px + 0.2vw);
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            padding-top: 5%; /* 5% margin at the top */
-            padding-bottom: 1%; /* 1% margin at the bottom */
-            padding-left: 10%; /* 10% margin on the left */
-            padding-right: 10%; /* 10% margin on the right */
-            box-sizing: border-box;
-        }
+       body {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Allow for scrollable content */
+    background: linear-gradient(180deg, #070D29, #1E3A8A);
+    color: #ffffff;
+    font-size: calc(16px + 0.2vw);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    padding: 5% 10% 1% 10%; /* Adjust padding to balance top, sides, and bottom */
+    box-sizing: border-box;
+}
 
         .header {
             width: 100%;
@@ -41,16 +38,17 @@
             padding: 0;
         }
 
-        .container {
-            height: 67vh; /* Takes up the remaining two thirds */
-            overflow-y: auto;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            margin: 20px;
-            flex-grow: 1;
-        }
+  .container {
+    height: calc(67vh + 20px); /* Extend the box slightly beyond the viewport */
+    overflow-y: auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin: 20px;
+    flex-grow: 1;
+}
+
 
         @media (max-width: 768px) {
             .header {
