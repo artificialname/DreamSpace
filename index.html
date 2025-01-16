@@ -241,43 +241,47 @@ body {
 
         let isRequesting = false;
 
-        async function askChatGPT() {
-            const question = document.getElementById('question').value;
-            const responseDiv = document.getElementById('response');
+async function askChatGPT() {
+    const question = document.getElementById('question').value;
+    const responseDiv = document.getElementById('response');
 
-            if (!question.trim()) {
-                responseDiv.textContent = 'Please enter a dream description.';
-                return;
-            }
+    if (!question.trim()) {
+        responseDiv.textContent = 'Please enter a dream description.';
+        return;
+    }
 
-            if (!analyzeButton.classList.contains('active')) {
-                responseDiv.textContent = 'Please complete all selections before analyzing.';
-                return;
-            }
+    if (!analyzeButton.classList.contains('active')) {
+        responseDiv.textContent = 'Please complete all selections before analyzing.';
+        return;
+    }
 
-            responseDiv.textContent = 'Loading...';
-            isRequesting = true;
+    responseDiv.textContent = 'Loading...';
+    isRequesting = true;
 
-            try {
-                const response = await fetch('https://dreamspace-ivna.onrender.com/ask', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        question,
-                        country: countryDropdown.value,
-                        age: ageDropdown.value,
-                        soundWave: soundWaveDropdown.value,
-                    }),
-                });
+    try {
+        const response = await fetch('https://dreamspace-ivna.onrender.com/ask', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                question,
+                country: countryDropdown.value,
+                age: ageDropdown.value,
+                soundWave: soundWaveDropdown.value,
+            }),
+        });
 
-                const data = await response.json();
-                responseDiv.textContent = data.answer || `Error: ${data.error}`;
-            } catch (error) {
-                responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
-            } finally {
-                isRequesting = false;
-            }
-        }
+        const data = await response.json();
+        responseDiv.textContent = data.answer || `Error: ${data.error}`;
+
+        // Automatically scroll to the response
+        responseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (error) {
+        responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
+    } finally {
+        isRequesting = false;
+    }
+}
+
     </script>
 </body>
 </html>
