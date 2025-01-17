@@ -111,16 +111,17 @@ body {
             background-color: #0056b3;
         }
 
- #response {
+#response {
     margin-top: 20px;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 1px solid #b6d7ff;
-    border-radius: 5px;
-    color: #000000;
+    padding: 20px;
+    background: linear-gradient(180deg, #070D29, #1E3A8A); /* Match main page background */
+    border: none; /* Remove border */
+    border-radius: 10px;
+    color: #ffffff; /* White font */
     white-space: pre-wrap;
-    transition: height 0.3s ease, padding 0.3s ease; /* Smooth transition for height and padding changes */
+    transition: height 0.3s ease, padding 0.3s ease; /* Smooth transition */
 }
+
 
         .instructions {
             margin-bottom: 20px;
@@ -275,11 +276,16 @@ async function askChatGPT() {
         });
 
         const data = await response.json();
-        responseDiv.textContent = data.answer || `Error: ${data.error}`;
+       responseDiv.textContent = data.answer || `Error: ${data.error}`;
 
-        // Dynamically add blank space underneath
-        responseDiv.style.height = 'calc(100vh - 50px)'; // Make the response section cover the viewport height minus header
-        responseDiv.style.paddingBottom = '50px'; // Add extra padding for spacing
+// Dynamically set styles for the response
+responseDiv.style.background = 'linear-gradient(180deg, #070D29, #1E3A8A)';
+responseDiv.style.color = '#ffffff';
+responseDiv.style.height = 'calc(100vh - 50px)'; // Cover viewport height minus header
+responseDiv.style.paddingBottom = '50px'; // Add extra padding for spacing
+
+        
+       
         
         // Scroll to align the response section at the top
         responseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
