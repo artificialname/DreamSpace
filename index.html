@@ -296,6 +296,33 @@ responseDiv.style.paddingBottom = '50px'; // Add extra padding for spacing
     }
 }
 
+    const soundWaveDropdown = document.getElementById('soundWave');
+    const dreamSection = document.querySelector('h1:contains("Describe your dream here:")');
+
+    // Create a warning box element
+    const warningBox = document.createElement('div');
+    warningBox.id = 'warningBox';
+    warningBox.style.display = 'none'; // Hidden by default
+    warningBox.style.marginTop = '10px';
+    warningBox.style.padding = '10px';
+    warningBox.style.border = '1px solid red';
+    warningBox.style.borderRadius = '5px';
+    warningBox.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
+    warningBox.style.color = 'red';
+    warningBox.textContent = 'You did not use the baseline';
+
+    // Add the warning box after the "Describe your dream here:" section
+    dreamSection.parentNode.insertBefore(warningBox, dreamSection.nextSibling);
+
+    // Event listener to show or hide the warning box based on dropdown selection
+    soundWaveDropdown.addEventListener('change', () => {
+        if (soundWaveDropdown.value === 'no') {
+            warningBox.style.display = 'block'; // Show warning box
+        } else {
+            warningBox.style.display = 'none'; // Hide warning box
+        }
+    });
+
 
     </script>
 
