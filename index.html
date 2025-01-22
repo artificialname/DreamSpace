@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Soundwave Dream Analysis</title>
-      <meta name="description" content="Sublime dream analysis and dream interpretation." />
+    <meta name="description" content="Sublime dream analysis and dream interpretation." />
     <meta name="keywords" content="dream analysis, dream interpretation, soundwave, sleep, dream insights" />
     <meta name="robots" content="index, follow" />
     <style>
@@ -190,7 +190,7 @@
         const responseDiv = document.getElementById('response');
 
         const countries = [
-            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", /* truncated for brevity */
+            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)", "Congo (Democratic Republic)", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "North Korea", "South Korea", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
         ];
 
         countries.forEach(country => {
@@ -224,58 +224,29 @@
         soundWaveDropdown.addEventListener('change', validateSelections);
         questionTextArea.addEventListener('input', validateSelections);
 
+        async function askChatGPT() {
+            const question = questionTextArea.value;
 
-   async function askChatGPT() {
-    const question = questionTextArea.value;
+            if (!question.trim()) {
+                responseDiv.textContent = 'Please enter a dream description.';
+                return;
+            }
 
-    if (!question.trim()) {
-        responseDiv.textContent = 'Please enter a dream description.';
-        return;
-    }
+            if (!analyzeButton.classList.contains('active')) {
+                responseDiv.textContent = 'Please complete all selections before submitting.';
+                return;
+            }
 
-    if (!analyzeButton.classList.contains('active')) {
-        responseDiv.textContent = 'Please complete all selections before analyzing.';
-        return;
-    }
-
-    responseDiv.textContent = 'Loading...';
-
-    try {
-        const response = await fetch('https://dreamspace-ivna.onrender.com/ask', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                question,
-                country: countryDropdown.value,
-                age: ageDropdown.value,
-                soundWave: soundWaveDropdown.value,
-            }),
-        });
-
-        const data = await response.json();
-
-        let interpretation = data.answer || `Error: ${data.error}`;
-
-        if (soundWaveDropdown.value === 'no') {
-            interpretation = "You did not play the soundwave baseline while you were asleep, so this interpretation will not be as insightful as a synchronised dream. Next time, sleep with the baseline playing - remember, the volume can be set low. It does not need to be audible while awake. Here is your unsynchronised interpretation:\n\n" + interpretation;
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ question })
+            });
+            const result = await response.json();
+            responseDiv.textContent = result.analysis || 'Error in analyzing the dream.';
         }
-
-        responseDiv.textContent = interpretation;
-
-        // Smooth scroll to the response section (response box)
-        responseDiv.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-
-        // Adjust scroll position for fixed header or offsets
-        const headerHeight = document.querySelector('.header').offsetHeight;  // Get header height
-        window.scrollBy(0, -headerHeight);  // Scroll by header height to make sure the response box is aligned with the top
-
-    } catch (error) {
-        responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
-    }
-}
-</script>
+    </script>
 </body>
 </html>
