@@ -257,6 +257,9 @@
                 }
 
                 responseDiv.textContent = interpretation;
+
+                // Scroll to the response
+                responseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } catch (error) {
                 responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
             }
