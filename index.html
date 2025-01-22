@@ -225,7 +225,7 @@
         questionTextArea.addEventListener('input', validateSelections);
 
 
-     async function askChatGPT() {
+   async function askChatGPT() {
     const question = questionTextArea.value;
 
     if (!question.trim()) {
@@ -262,7 +262,7 @@
 
         responseDiv.textContent = interpretation;
 
-        // Smooth scroll to the response section
+        // Smooth scroll to the response section (response box)
         responseDiv.scrollIntoView({
             behavior: 'smooth',
             block: 'start'
@@ -270,7 +270,7 @@
 
         // Adjust scroll position for fixed header or offsets
         const headerHeight = document.querySelector('.header').offsetHeight;  // Get header height
-        window.scrollBy(0, -headerHeight);  // Scroll by header height to make sure response box is aligned with top
+        window.scrollBy(0, -headerHeight);  // Scroll by header height to make sure the response box is aligned with the top
 
     } catch (error) {
         responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
