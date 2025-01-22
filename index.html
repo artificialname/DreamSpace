@@ -224,49 +224,58 @@
         soundWaveDropdown.addEventListener('change', validateSelections);
         questionTextArea.addEventListener('input', validateSelections);
 
-        async function askChatGPT() {
-            const question = questionTextArea.value;
 
-            if (!question.trim()) {
-                responseDiv.textContent = 'Please enter a dream description.';
-                return;
-            }
+       async function askChatGPT() {
+    const question = questionTextArea.value;
 
-            if (!analyzeButton.classList.contains('active')) {
-                responseDiv.textContent = 'Please complete all selections before analyzing.';
-                return;
-            }
+    if (!question.trim()) {
+        responseDiv.textContent = 'Please enter a dream description.';
+        return;
+    }
 
-            responseDiv.textContent = 'Loading...';
+    if (!analyzeButton.classList.contains('active')) {
+        responseDiv.textContent = 'Please complete all selections before analyzing.';
+        return;
+    }
 
-            try {
-                const response = await fetch('https://dreamspace-ivna.onrender.com/ask', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        question,
-                        country: countryDropdown.value,
-                        age: ageDropdown.value,
-                        soundWave: soundWaveDropdown.value,
-                    }),
-                });
+    responseDiv.textContent = 'Loading...';
 
-                const data = await response.json();
+    try {
+        const response = await fetch('https://dreamspace-ivna.onrender.com/ask', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                question,
+                country: countryDropdown.value,
+                age: ageDropdown.value,
+                soundWave: soundWaveDropdown.value,
+            }),
+        });
 
-                let interpretation = data.answer || `Error: ${data.error}`;
+        const data = await response.json();
 
-                if (soundWaveDropdown.value === 'no') {
-                    interpretation = "You did not play the soundwave baseline while you were asleep, so this interpretation will not be as insightful as a synchronised dream. Next time, sleep with the baseline playing - remember, the volume can be set low. It does not need to be audible while awake. Here is your unsynchronised interpretation:\n\n" + interpretation;
-                }
+        let interpretation = data.answer || `Error: ${data.error}`;
 
-                responseDiv.textContent = interpretation;
-
-                // Scroll to the response
-                responseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } catch (error) {
-                responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
-            }
+        if (soundWaveDropdown.value === 'no') {
+            interpretation = "You did not play the soundwave baseline while you were asleep, so this interpretation will not be as insightful as a synchronised dream. Next time, sleep with the baseline playing - remember, the volume can be set low. It does not need to be audible while awake. Here is your unsynchronised interpretation:\n\n" + interpretation;
         }
+
+        responseDiv.textContent = interpretation;
+
+        // Smooth scroll to the response section
+        responseDiv.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+        });
+
+        // Add offset adjustment if necessary
+        const offset = 100; // Adjust this value based on the size of your fixed header
+        window.scrollBy(0, -offset);
+    } catch (error) {
+        responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
+    }
+}
+ 
     </script>
 </body>
 </html>
