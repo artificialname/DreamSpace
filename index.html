@@ -237,15 +237,32 @@
                 return;
             }
 
-            const response = await fetch('/analyze', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ question })
-            });
-            const result = await response.json();
-            responseDiv.textContent = result.analysis || 'Error in analyzing the dream.';
+            // Disable button during request to prevent resubmission
+            analyzeButton.disabled = true;
+            analyzeButton.classList.remove('active');
+            responseDiv.textContent = 'Analyzing your dream...';
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    responseDiv.textContent = result.analysis || 'Error in analyzing the dream.';
+                } else {
+                    responseDiv.textContent = 'There was an error processing your request.';
+                }
+            } catch (error) {
+                responseDiv.textContent = 'An error occurred. Please try again later.';
+            } finally {
+                // Re-enable the button after the request is finished
+                analyzeButton.disabled = false;
+            }
         }
     </script>
 </body>
