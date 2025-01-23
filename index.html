@@ -262,17 +262,14 @@
 
         responseDiv.textContent = interpretation;
 
-        // Smooth scroll to the response section (response box)
-responseDiv.scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
-});
+const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY; // Position relative to the viewport
+const headerHeight = document.querySelector('.header').offsetHeight;
 
-// Ensure header height adjustment after scrolling completes
-setTimeout(() => {
-    const headerHeight = document.querySelector('.header').offsetHeight; // Get accurate header height
-    window.scrollBy(0, -headerHeight); // Apply adjustment
-}, 1500); // Delay to match the smooth scroll duration
+window.scrollTo({
+    top: responseTop - headerHeight, // Snap to position considering header height
+    behavior: 'auto' // Instant snapping
+});
+f     
 
         
     } catch (error) {
