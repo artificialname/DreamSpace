@@ -262,19 +262,20 @@ async function askChatGPT() {
 
         responseDiv.textContent = interpretation;
 
-        // Scroll to the response section, aligning it with the top of the viewport
-        const responseTop = responseDiv.offsetTop; // Position relative to the document
+        // Scroll to the response section
+        const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY;
         const headerHeight = document.querySelector('.header').offsetHeight;
 
         window.scrollTo({
-            top: responseTop - headerHeight, // Align response section with the top
-            behavior: 'auto' // Instant snapping
+            top: responseTop - headerHeight - 20, // Adjust with header height and offset
+            behavior: 'smooth'
         });
 
     } catch (error) {
         responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
     }
 }
+
 
 </script>
 </body>
