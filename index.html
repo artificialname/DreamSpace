@@ -272,13 +272,18 @@ async function askChatGPT() {
         responseDiv.textContent = interpretation;
 
         // Scroll to the response section
-        const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY;
-        const headerHeight = document.querySelector('.header').offsetHeight;
+        setTimeout(() => {
+            const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY;
+            const headerHeight = document.querySelector('.header').offsetHeight || 60; // Default header height
+            const offset = 20; // Extra spacing
+            const scrollPosition = responseTop - headerHeight - offset;
 
-        window.scrollTo({
-            top: responseTop - headerHeight - 20, // Adjust with header height and offset
-            behavior: 'smooth'
-        });
+            console.log("Scrolling to:", scrollPosition);
+            window.scrollTo({
+                top: scrollPosition,
+                behavior: 'smooth'
+            });
+        }, 100); // Adjust delay as needed
 
     } catch (error) {
         responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
