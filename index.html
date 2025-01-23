@@ -233,7 +233,6 @@
         soundWaveDropdown.addEventListener('change', validateSelections);
         questionTextArea.addEventListener('input', validateSelections);
 
-
 async function askChatGPT() {
     const question = questionTextArea.value;
 
@@ -271,24 +270,20 @@ async function askChatGPT() {
 
         responseDiv.textContent = interpretation;
 
-        // Scroll to the response section
-        setTimeout(() => {
-            const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY;
-            const headerHeight = document.querySelector('.header').offsetHeight || 60; // Default header height
-            const offset = 20; // Extra spacing
-            const scrollPosition = responseTop - headerHeight - offset;
+        // Scroll to the response section immediately
+        const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY;
+        const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
 
-            console.log("Scrolling to:", scrollPosition);
-            window.scrollTo({
-                top: scrollPosition,
-                behavior: 'smooth'
-            });
-        }, 100); // Adjust delay as needed
+        window.scrollTo({
+            top: responseTop - headerHeight - 20,
+            behavior: 'smooth',
+        });
 
     } catch (error) {
         responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
     }
 }
+
 
 
 </script>
