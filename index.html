@@ -225,7 +225,7 @@
         questionTextArea.addEventListener('input', validateSelections);
 
 
-   async function askChatGPT() {
+async function askChatGPT() {
     const question = questionTextArea.value;
 
     if (!question.trim()) {
@@ -262,20 +262,20 @@
 
         responseDiv.textContent = interpretation;
 
-const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY; // Position relative to the viewport
-const headerHeight = document.querySelector('.header').offsetHeight;
+        // Scroll to the response section, aligning it with the top of the viewport
+        const responseTop = responseDiv.offsetTop; // Position relative to the document
+        const headerHeight = document.querySelector('.header').offsetHeight;
 
-window.scrollTo({
-    top: responseTop - headerHeight, // Snap to position considering header height
-    behavior: 'auto' // Instant snapping
-});
-   
+        window.scrollTo({
+            top: responseTop - headerHeight, // Align response section with the top
+            behavior: 'auto' // Instant snapping
+        });
 
-        
     } catch (error) {
         responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
     }
 }
+
 </script>
 </body>
 </html>
