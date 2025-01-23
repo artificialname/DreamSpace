@@ -263,15 +263,18 @@
         responseDiv.textContent = interpretation;
 
         // Smooth scroll to the response section (response box)
-        responseDiv.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
+responseDiv.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+});
 
-        // Adjust scroll position for fixed header or offsets
-        const headerHeight = document.querySelector('.header').offsetHeight;  // Get header height
-        window.scrollBy(0, -headerHeight);  // Scroll by header height to make sure the response box is aligned with the top
+// Ensure header height adjustment after scrolling completes
+setTimeout(() => {
+    const headerHeight = document.querySelector('.header').offsetHeight; // Get accurate header height
+    window.scrollBy(0, -headerHeight); // Apply adjustment
+}, 500); // Delay to match the smooth scroll duration
 
+        
     } catch (error) {
         responseDiv.textContent = 'Failed to connect to the server. Please try again later.';
     }
