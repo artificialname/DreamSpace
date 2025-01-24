@@ -203,12 +203,10 @@
         ];
 
         countries.forEach(country => {
-            console.log('Starting to populate country dropdown...');
             const option = document.createElement("option");
             option.value = country;
             option.textContent = country;
             countryDropdown.appendChild(option);
-            console.log('Country dropdown populated successfully.');
         });
 
         function validateSelections() {
@@ -272,18 +270,13 @@ async function askChatGPT() {
 
         responseDiv.textContent = interpretation;
 
-         // Add blank space dynamically
-        const spacer = document.createElement('div');
-        spacer.style.height = '75vh';  // 75% of the viewport height
-        responseDiv.parentNode.insertBefore(spacer, responseDiv.nextSibling);
-
         // Scroll to the response section immediately
         const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY;
-       
+        const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
+
         window.scrollTo({
-            top: responseTop,
+            top: responseTop - headerHeight - 20,
             behavior: 'smooth',
-            console.log("ResponseDiv Position:", responseTop);  // Log the position to see if it's correct
         });
 
     } catch (error) {
