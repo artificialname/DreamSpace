@@ -271,11 +271,10 @@ async function askChatGPT() {
         responseDiv.textContent = interpretation;
 
         // Scroll to the response section immediately
-        const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY;
-        const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
-
+        const responseTop = responseDiv.getBoundingClientRect().top;
+       
         window.scrollTo({
-            top: responseTop - headerHeight - 20,
+            top: responseTop,
             behavior: 'smooth',
         });
 
