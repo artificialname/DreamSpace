@@ -281,7 +281,7 @@ async function askChatGPT() {
         const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
 
         window.scrollTo({
-            top: responseTop - headerHeight - 20,
+            top: responseTop,
             behavior: 'smooth',
         });
 
