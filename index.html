@@ -268,10 +268,7 @@ async function askChatGPT() {
             interpretation = "You did not play the soundwave baseline while you were asleep, so this interpretation will not be as insightful as a synchronised dream. Next time, sleep with the baseline playing - remember, the volume can be set low. It does not need to be audible while awake. Here is your unsynchronised interpretation:\n\n" + interpretation;
         }
 
-        const spacer = document.createElement('div');
-        spacer.style.height = '75vh'; // 75% of the viewport height
-
-        responseDiv.textContent = interpretation + spacer;
+        responseDiv.textContent = interpretation;
 
         // Scroll to the response section immediately
         const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY;
