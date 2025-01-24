@@ -270,6 +270,11 @@ async function askChatGPT() {
 
         responseDiv.textContent = interpretation;
 
+         // Add blank space dynamically
+        const spacer = document.createElement('div');
+        spacer.style.height = '75vh';  // 75% of the viewport height
+        document.body.appendChild(spacer);  // Add the spacer div to the page
+
         // Scroll to the response section immediately
         const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY;
        
