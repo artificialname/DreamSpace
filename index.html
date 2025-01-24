@@ -271,7 +271,7 @@ async function askChatGPT() {
         responseDiv.textContent = interpretation;
 
         // Scroll to the response section immediately
-        const responseTop = responseDiv.getBoundingClientRect().top;
+        const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY;
        
         window.scrollTo({
             top: responseTop,
