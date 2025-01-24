@@ -276,6 +276,7 @@ async function askChatGPT() {
         window.scrollTo({
             top: responseTop,
             behavior: 'smooth',
+            console.log("ResponseDiv Position:", responseTop);  // Log the position to see if it's correct
         });
 
     } catch (error) {
