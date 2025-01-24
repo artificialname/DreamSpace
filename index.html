@@ -203,10 +203,12 @@
         ];
 
         countries.forEach(country => {
+            console.log('Starting to populate country dropdown...');
             const option = document.createElement("option");
             option.value = country;
             option.textContent = country;
             countryDropdown.appendChild(option);
+            console.log('Country dropdown populated successfully.');
         });
 
         function validateSelections() {
@@ -273,7 +275,7 @@ async function askChatGPT() {
          // Add blank space dynamically
         const spacer = document.createElement('div');
         spacer.style.height = '75vh';  // 75% of the viewport height
-        document.body.appendChild(spacer);  // Add the spacer div to the page
+        responseDiv.parentNode.insertBefore(spacer, responseDiv.nextSibling);
 
         // Scroll to the response section immediately
         const responseTop = responseDiv.getBoundingClientRect().top + window.scrollY;
