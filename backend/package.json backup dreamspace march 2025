@@ -1,0 +1,16 @@
+{
+  "name": "chatgpt-backend",
+  "version": "1.0.0",
+  "description": "A simple ChatGPT question-answer backend.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "bottleneck": "^2.19.5"
+  }
+}
